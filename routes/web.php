@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoteController;
+use App\Models\Note;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +20,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('notes', NoteController::class);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
+    $notes = Note::latest()->paginate(5);
+    
+    return view('notes.index',compact('notes'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
 })->name('dashboard');
+
+Route::resource('notes', NoteController::class);
