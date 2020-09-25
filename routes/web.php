@@ -22,10 +22,8 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    $notes = Note::latest()->paginate(5);
-    
-    return view('notes.index',compact('notes'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+    //retornar a un controlador y funcion especifica
+    return redirect()->action([NoteController::class, 'index']);
 })->name('dashboard');
 
 Route::resource('notes', NoteController::class);
